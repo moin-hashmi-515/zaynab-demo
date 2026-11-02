@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Zaynab Interiors — Demo CMS</title>
+<style>
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;color:#222;background:#faf8f5;line-height:1.55}
+.wrap{max-width:900px;margin:0 auto;padding:20px}
+.banner{background:#b3261e;color:#fff;padding:12px 16px;font-weight:700}
+.card{background:#fff;border-radius:14px;padding:18px;margin:16px 0;box-shadow:0 2px 10px rgba(0,0,0,.06)}
+input,select{padding:10px;border:1px solid #cbd5d7;border-radius:10px;font:inherit;width:100%}
+button{cursor:pointer;background:#111;color:#fff;border:0;padding:10px 18px;border-radius:10px;font-weight:700}
+button.small{padding:6px 12px;font-size:14px}button.red{background:#b3261e}
+table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:8px;border-bottom:1px solid #e5e5e5;vertical-align:top}
+.note{font-size:14px;color:#5a5a5a}a{color:#111}
+</style>
+</head>
+<body>
+<div class="banner">DEMO CMS — Zaynab Interiors &middot; Front-end demo only</div>
+<div class="wrap">
+<h1>Firm Dashboard (Demo)</h1>
+<p class="note">This CMS is a front-end demo. Data lives in this browser's local storage only. Role switching below is UI-only — there is no real login, server, authentication, payment, or notification system. Do not enter real client data. A production site would need a backend / WordPress build.</p>
+<p><a href="index.html">&larr; Back to demo website</a></p>
+<div class="card"><h2>Enquiries received (demo)</h2>
+<div id="inqList"></div>
+<p><button onclick="clearInq()" class="red small">Clear demo enquiries</button></p>
+</div>
+<div class="card"><h2>Role (UI-only)</h2>
+<p><select id="role" onchange="document.getElementById('roleNote').textContent='Viewing as: '+this.value+' (demo only — no permission change happens).'">
+<option>Firm Admin (demo)</option><option>Designer (demo)</option><option>Site Team (demo)</option></select></p>
+<p id="roleNote" class="note">Viewing as: Firm Admin (demo) (demo only — no permission change happens).</p>
+</div>
+</div>
+<script>
+const KEY='zaynab_demo_v1';
+function getData(){try{return JSON.parse(localStorage.getItem(KEY))||{}}catch(e){return{}}}
+function save(d){localStorage.setItem(KEY,JSON.stringify(d))}
+function render(){
+  const d=getData();const inqs=d.inquiries||[];
+  document.getElementById('inqList').innerHTML = inqs.length ? '<table><tr><th>Name</th><th>Email</th><th>Type</th><th>Area</th><th>Status</th><th></th></tr>'+inqs.map((a,i)=>'<tr><td>'+(a.name||'')+'</td><td>'+(a.email||'')+'</td><td>'+(a.type||'')+'</td><td>'+(a.area||'')+'</td><td>'+(a.status||'Pending')+'</td><td><button class="small" onclick="setStatus('+i+',\'Contacted\')">Mark contacted</button> <button class="small red" onclick="setStatus('+i+',\'Closed\')">Close</button></td></tr>').join('')+'</table>' : '<p>No demo enquiries yet. Submit the form on the demo website to see one here.</p>';
+}
+function setStatus(i,s){const d=getData();d.inquiries[i].status=s;save(d);render()}
+function clearInq(){const d=getData();d.inquiries=[];save(d);render()}
+render();
+</script>
+</body>
+</html>
